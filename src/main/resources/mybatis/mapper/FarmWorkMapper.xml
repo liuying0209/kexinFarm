@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.farm.core.farm.mapper.FarmWorkMapper" >
+  <resultMap id="BaseResultMap" type="com.farm.base.farm.FarmWork" >
+    <id column="id" property="id"  />
+    <result column="name" property="name"  />
+    <result column="type" property="type"  />
+    <result column="create_time" property="createTime" />
+    <result column="update_time" property="updateTime" />
+    <result column="category" property="category"  />
+    <result column="parent_id" property="parentId"  />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, name, type, create_time, update_time, category, parent_id
+  </sql>
+
+  <select id="listAddFarmWork" resultMap="BaseResultMap" >
+    select
+    <include refid="Base_Column_List"/>
+    from farm_work
+    where type=1 and parent_id=0
+  </select>
+
+
+  <select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    select
+    <include refid="Base_Column_List"/>
+    from farm_work
+    where id=#{id}
+  </select>
+
+  <select id="findByParentId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    select
+    <include refid="Base_Column_List"/>
+    from farm_work
+    where parent_id=#{id}
+  </select>
+
+
+
+</mapper>

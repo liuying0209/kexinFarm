@@ -1,0 +1,74 @@
+log:
+  level: info
+  path: /log/kx-farm-core
+
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.jdbc.Driver
+    platform: mysql
+    url: jdbc:mysql://rm-m5e3112m1pt7drjfao.mysql.rds.aliyuncs.com:3306/kexinfarms?useUnicode=true&characterEncoding=utf8&autoReconnect=true&useSSL=false
+    username: kexinfarms
+    password: kexin#%1998
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT1FROMDUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    filters: stat,wall,log4j
+    logSlowSql: true
+  redis:
+    #    host: 172.30.66.104:6379
+    host: 127.0.0.1
+    port: 6379
+    password: kxfarm
+    keyPre: prod
+    pool:
+      max-active: 5
+      max-wait: 1000
+      max-idle: 100
+      min-idle: 10
+    timeout: 5000
+  messages:
+    basename: error_codes
+    cache-seconds: 600
+
+#待研究什么意识
+security:
+  basic:
+    enabled: false
+
+server:
+  port: 8082
+
+aliyun:
+  access-key-id: LTAI1fJeRUIcd3Q6
+  access-key-secret: NvSg6yXjfdgFU6we3QefijCX6AxVlh
+  oss:
+    endpoint: http://oss-cn-beijing.aliyuncs.com
+    bucket-name: kexinfarms
+
+oss_url: https://kexinfarms.oss-cn-beijing.aliyuncs.com/
+
+dd:
+  suite_key: suitezqs8jupv5yqwwxl6
+  suite_secret: 6abSohyt6M_PjaVzEiY898ismSq8C9DT6TmyDSSQ5I1uLItr0flpGhwjAGH_xr7W
+  encoding_aes_key: p05nsauxjee6jwqwyll7juyoa5pilxohoskspo1njsg
+  token: kxfarmdindin
+
+
+
+
+
+
+
+
+
+
+

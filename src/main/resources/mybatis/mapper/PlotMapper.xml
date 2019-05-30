@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.farm.core.farm.mapper.PlotMapper" >
+  <resultMap id="BaseResultMap" type="com.farm.base.farm.Plot" >
+    <id column="id" property="id"  />
+    <result column="type" property="type"  />
+    <result column="name" property="name"  />
+    <result column="farm_id" property="farmId"  />
+    <result column="create_time" property="createTime"  />
+    <result column="update_time" property="updateTime"  />
+  </resultMap>
+
+
+  <sql id="Base_Column_List" >
+    id, type, name, farm_id, create_time, update_time
+  </sql>
+
+  <select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from plot
+    where id = #{id}
+  </select>
+
+  <delete id="delete" parameterType="java.lang.Long" >
+    delete from plot
+    where id = #{id}
+  </delete>
+
+  <delete id="deleteByFarmId" parameterType="java.lang.Long" >
+    delete from plot
+    where farm_id = #{farmId}
+  </delete>
+
+  <select id="listByFarmIdAndType" resultMap="BaseResultMap" >
+    select
+    p.id,
+    p.type,
+    p.name,
+    p.farm_id,
+    p.create_time,
+    p.update_time
+    from plot p ,farm f
+    where p.farm_id=f.id
+    AND f.id = #{farmId}
+    AND p.type=#{type}
+  </select>
+
+  <insert id="insert" parameterType="com.farm.base.farm.Plot" >
+    insert into plot
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="name != null" >
+        name,
+      </if>
+      <if test="farmId != null" >
+        farm_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="type != null" >
+        #{type},
+      </if>
+      <if test="name != null" >
+        #{name},
+      </if>
+      <if test="farmId != null" >
+        #{farmId},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="update" parameterType="com.farm.base.farm.Plot" >
+    update plot
+    <set >
+      <if test="type != null" >
+        type = #{type},
+      </if>
+      <if test="name != null" >
+        name = #{name},
+      </if>
+      <if test="farmId != null" >
+        farm_id = #{farmId},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+
+</mapper>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.farm.core.record.mapper.FarmingParamTemplateMapper">
+    <resultMap id="BaseResultMap" type="com.farm.base.record.FarmingParamTemplate">
+        <id column="id" property="id"/>
+        <result column="farm_work_id" property="farmWorkId"/>
+        <result column="crop_id" property="cropId"/>
+        <result column="parent_id" property="parentId"/>
+        <result column="content" property="content"/>
+    </resultMap>
+
+    <select id="findByFarmingIdAndCropId" resultMap="BaseResultMap">
+    select 
+    id, farm_work_id, crop_id, parent_id,content
+    from farming_param_template
+    where farm_work_id = #{farmingId} and crop_id=#{cropId}
+  </select>
+
+</mapper>

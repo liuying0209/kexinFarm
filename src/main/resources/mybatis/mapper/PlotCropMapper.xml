@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.farm.core.farm.mapper.PlotCropMapper">
+    <resultMap id="BaseResultMap" type="com.farm.base.farm.PlotCrop">
+        <id column="id" property="id"/>
+        <result column="plot_id" property="plotId"/>
+        <result column="crop_id" property="cropId"/>
+        <result column="crop_variety" property="cropVariety"/>
+        <result column="crop_name" property="cropName"/>
+        <result column="area" property="area"/>
+        <result column="unit" property="unit"/>
+        <result column="plot_name" property="plotName"/>
+        <result column="batch_time" property="batchTime"/>
+        <result column="user_id" property="userId"/>
+        <result column="score" property="score"/>
+        <result column="status" property="status"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+    id, plot_id, crop_id, crop_variety, crop_name, area, unit, plot_name, batch_time,user_id,score,status,create_time,
+    update_time
+  </sql>
+
+    <select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from plot_crop
+        where id = #{id}
+    </select>
+
+    <select id="findByUserId" resultType="java.util.Map" parameterType="java.lang.String">
+        select
+          id                as id,
+          crop_variety      as cropVariety,
+          crop_name         as cropName,
+          plot_name         as plotName,
+          user_id           as userId,
+          status
+        from plot_crop
+        where user_id = #{userId}
+        limit 1
+    </select>
+
+
+    <select id="findByUserIdAndFarmId" resultType="java.util.Map">
+        select
+          pc.id                as id,
+          pc.crop_variety      as cropVariety,
+          pc.crop_name         as cropName,
+          pc.plot_name         as plotName,
+          pc.user_id           as userId,
+          pc.status
+        from plot_crop pc,plot p
+        where pc.plot_id =p.id  and p.farm_id=#{farmId} and  pc.user_id = #{userId}
+        limit 1
+
+    </select>
+
+    <select id="findByPlotId" resultType="java.util.Map" parameterType="java.lang.Long">
+         select crop_id id,
+                crop_name name
+         from plot_crop
+         where plot_id=#{plotId}
+         group by crop_id ,crop_name
+    </select>
+
+
+    <select id="countByFarmAndPlotType" resultType="java.lang.Integer">
+
+        select
+        count(*)
+        from farm f ,plot p ,plot_crop pc
+        where f.id=p.farm_id and p.id =pc.plot_id
+        and p.type=#{plotType} and f.id=#{farmId}
+    </select>
+
+
+    <select id="findByPlotIdAndCropId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from plot_crop
+        where plot_id=#{plotId} AND crop_id=#{cropId}
+    </select>
+
+    <select id="getFarmId" resultType="java.lang.Long" parameterType="java.lang.Long">
+         select p.farm_id
+        from plot_crop pc,plot p
+        where pc.plot_id=p.id
+        and pc.id=#{plotCropId}
+    </select>
+
+    <select id="countFarmScore" resultType="java.lang.Integer" parameterType="java.lang.Long">
+         select SUM(score)
+        from plot_crop pc,plot p
+        where pc.plot_id=p.id
+        and p.farm_id=#{farmId}
+    </select>
+
+
+    <select id="countPlotCropByFarmId" resultType="java.lang.Integer" parameterType="java.lang.Long">
+         select count(*)
+        from plot_crop pc,plot p
+        where pc.plot_id=p.id
+        and p.farm_id=#{farmId}
+    </select>
+
+
+    <select id="findPlotCropIdByFarmId" resultType="java.lang.Long" parameterType="java.lang.Long">
+        select
+        pc.id as id
+        from plot_crop pc,plot p
+        where pc.plot_id=p.id
+        and p.farm_id=#{farmId}
+    </select>
+
+
+    <select id="findByFarmIdAndUserId" resultType="java.util.Map" parameterType="com.farm.core.record.PlotCropParams">
+        select
+        pc.id as id,
+        pc.plot_id as plotId,
+        pc.crop_id as cropId,
+        pc.crop_name as cropName,
+        pc.crop_variety as cropVariety,
+        pc.plot_name as plotName,
+        pc.batch_time as batchTime,
+        pc.score as score,
+        pc.create_time as createTime,
+        pc.update_time as updateTime,
+        c.image as image
+        from plot p ,plot_crop pc,crop c
+        where p.`id`=pc.plot_id and pc.crop_id=c.id
+        <if test="farmId!=null and farmId!=''">
+            and p.farm_id=#{farmId}
+        </if>
+        <if test="cropId!=null and cropId!=''">
+            and pc.crop_id=#{cropId}
+        </if>
+        <if test="plotId!=null and plotId!=''">
+            and p.id=#{plotId}
+        </if>
+        <if test="status!=null and status!=''">
+            and pc.status=#{status}
+        </if>
+
+    </select>
+
+    <select id="countArea" resultType="java.lang.Integer" parameterType="java.lang.Long">
+       select
+       IFNULL(SUM(pc.area),0) num
+        from plot p ,plot_crop pc
+        where p.`id`=pc.plot_id
+        and p.farm_id=#{farmId}
+
+    </select>
+
+
+    <delete id="delete" parameterType="java.lang.Long">
+    delete from plot_crop
+    where id = #{id}
+  </delete>
+
+
+    <insert id="insert" parameterType="com.farm.base.farm.PlotCrop" keyProperty="id" useGeneratedKeys="true">
+        insert into plot_crop
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="plotId != null">
+                plot_id,
+            </if>
+            <if test="cropId != null">
+                crop_id,
+            </if>
+            <if test="cropVariety != null">
+                crop_variety,
+            </if>
+            <if test="cropName != null">
+                crop_name,
+            </if>
+            <if test="area != null">
+                area,
+            </if>
+            <if test="unit != null">
+                unit,
+            </if>
+            <if test="plotName != null">
+                plot_name,
+            </if>
+            <if test="batchTime != null">
+                batch_time,
+            </if>
+            <if test="userId != null">
+                user_id,
+            </if>
+            <if test="score != null">
+                score,
+            </if>
+            <if test="status != null">
+                status,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="plotId != null">
+                #{plotId},
+            </if>
+            <if test="cropId != null">
+                #{cropId},
+            </if>
+            <if test="cropVariety != null">
+                #{cropVariety},
+            </if>
+            <if test="cropName != null">
+                #{cropName},
+            </if>
+            <if test="area != null">
+                #{area},
+            </if>
+            <if test="unit != null">
+                #{unit},
+            </if>
+            <if test="plotName != null">
+                #{plotName},
+            </if>
+            <if test="batchTime != null">
+                #{batchTime},
+            </if>
+            <if test="userId != null">
+                #{userId},
+            </if>
+            <if test="score != null">
+                #{score},
+            </if>
+            <if test="status != null">
+                #{status},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+        </trim>
+    </insert>
+
+
+    <update id="update" parameterType="com.farm.base.farm.PlotCrop">
+        update plot_crop
+        <set>
+            <if test="plotId != null">
+                plot_id = #{plotId},
+            </if>
+            <if test="cropId != null">
+                crop_id = #{cropId},
+            </if>
+            <if test="cropVariety != null">
+                crop_variety = #{cropVariety},
+            </if>
+            <if test="cropName != null">
+                crop_name = #{cropName},
+            </if>
+            <if test="area != null">
+                area = #{area},
+            </if>
+            <if test="unit != null">
+                unit = #{unit},
+            </if>
+            <if test="plotName != null">
+                plot_name = #{plotName},
+            </if>
+            <if test="batchTime != null">
+                batch_time=#{batchTime},
+            </if>
+            <if test="userId != null">
+                user_id=#{userId},
+            </if>
+            <if test="score != null">
+                score= #{score},
+            </if>
+            <if test="status != null">
+                status=#{status},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>

@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.farm.core.record.mapper.RecordAssessMapper" >
+  <resultMap id="BaseResultMap" type="com.farm.base.record.RecordAssess" >
+    <id column="id" property="id" />
+    <result column="record_id" property="recordId" />
+    <result column="reason" property="reason"  />
+    <result column="deduct_marks" property="deductMarks"  />
+    <result column="deduct_marks_type" property="deductMarksType"  />
+    <result column="admin_id" property="adminId" />
+    <result column="create_time" property="createTime"  />
+    <result column="update_time" property="updateTime"  />
+  </resultMap>
+  
+  
+  <sql id="Base_Column_List" >
+    id, record_id, reason, deduct_marks, deduct_marks_type, admin_id, create_time, update_time
+  </sql>
+ 
+  <select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from record_assess
+    where id = #{id}
+  </select>
+
+  <select id="findByRecordId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from record_assess
+    where record_id = #{recordId}
+  </select>
+  
+  <delete id="delete" parameterType="java.lang.Long" >
+    delete from record_assess
+    where id = #{id}
+  </delete>
+  
+
+  <insert id="insert" parameterType="com.farm.base.record.RecordAssess" >
+    insert into record_assess
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="recordId != null" >
+        record_id,
+      </if>
+      <if test="reason != null" >
+        reason,
+      </if>
+      <if test="deductMarks != null" >
+        deduct_marks,
+      </if>
+      <if test="deductMarksType != null" >
+        deduct_marks_type,
+      </if>
+      <if test="adminId != null" >
+        admin_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="recordId != null" >
+        #{recordId},
+      </if>
+      <if test="reason != null" >
+        #{reason},
+      </if>
+      <if test="deductMarks != null" >
+        #{deductMarks},
+      </if>
+      <if test="deductMarksType != null" >
+        #{deductMarksType},
+      </if>
+      <if test="adminId != null" >
+        #{adminId},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime},
+      </if>
+    </trim>
+  </insert>
+  
+  <update id="update" parameterType="com.farm.base.record.RecordAssess" >
+    update record_assess
+    <set >
+      <if test="recordId != null" >
+        record_id = #{recordId},
+      </if>
+      <if test="reason != null" >
+        reason = #{reason},
+      </if>
+      <if test="deductMarks != null" >
+        deduct_marks = #{deductMarks},
+      </if>
+      <if test="deductMarksType != null" >
+        deduct_marks_type = #{deductMarksType},
+      </if>
+      <if test="adminId != null" >
+        admin_id = #{adminId},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+  
+</mapper>

@@ -1,0 +1,64 @@
+log:
+  level: info
+  path: /log/kx-farm-core
+
+spring:
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driverClassName: com.mysql.jdbc.Driver
+    driver-class-name: com.mysql.jdbc.Driver
+    platform: mysql
+    url: jdbc:mysql://127.0.0.1:3306/kx-farm?useUnicode=true&characterEncoding=utf8&autoReconnect=true&useSSL=false
+    username: root
+    password: password
+    initialSize: 5
+    minIdle: 5
+    maxActive: 20
+    maxWait: 60000
+    timeBetweenEvictionRunsMillis: 60000
+    minEvictableIdleTimeMillis: 300000
+    validationQuery: SELECT1FROMDUAL
+    testWhileIdle: true
+    testOnBorrow: false
+    testOnReturn: false
+    filters: stat,wall,log4j
+    logSlowSql: true
+  redis:
+    #    host: 172.30.66.104:6379
+    host: 127.0.0.1
+    port: 6379
+    password:
+    keyPre: local
+    pool:
+      max-active: 5
+      max-wait: 1000
+      max-idle: 100
+      min-idle: 10
+    timeout: 5000
+  messages:
+    basename: error_codes
+    cache-seconds: 600
+
+#待研究什么意识
+security:
+  basic:
+    enabled: false
+
+server:
+  port: 8080
+
+aliyun:
+  access-key-id: LTAIoY8WvSXBbPYE
+  access-key-secret: stnt8FLKnpFtOqwIaAmE9By7fEDSBQ
+  oss:
+    endpoint: http://oss-cn-beijing.aliyuncs.com
+    bucket-name: kxfarm
+
+
+oss_url: https://kxfarm.oss-cn-beijing.aliyuncs.com/
+
+dd:
+  suite_key: suitejknaevsalz40ayet
+  suite_secret: IWXDXy3JesXRJuv-m0y2Pi2hMQ_rdlm_uk_AjLfmEZk9I31usB2I1fcuR_fy6kzR
+  encoding_aes_key: 9ogc2aqtxeh0q2dy7qvs6rjl8s17828cbjy5l5fdhym
+  token: h17611013091

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.farm.core.farm.mapper.FarmAssessMapper" >
+  <resultMap id="BaseResultMap" type="com.farm.base.farm.FarmAssess" >
+    <id column="id" property="id"  />
+    <result column="farm_id" property="farmId"  />
+    <result column="farm_name" property="farmName"  />
+    <result column="score" property="score"  />
+    <result column="remark" property="remark"  />
+    <result column="create_time" property="createTime"  />
+    <result column="update_time" property="updateTime"  />
+  </resultMap>
+
+
+  <sql id="Base_Column_List" >
+    id, farm_id, farm_name, score, remark, create_time, update_time
+  </sql>
+
+  <select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from farm_assess
+    where id = #{id}
+  </select>
+
+
+  <select id="findByFarmId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from farm_assess
+    where farm_id = #{farmId}
+    order by create_time desc
+    limit 1
+  </select>
+
+  <select id="listByFarmId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from farm_assess
+    where farm_id = #{farmId}
+    order by create_time desc
+  </select>
+
+  <select id="countByFarmId" resultType="java.lang.Integer" parameterType="java.lang.Long" >
+    select
+    count(*)
+    from farm_assess
+    where farm_id = #{farmId}
+  </select>
+
+  <delete id="delete" parameterType="java.lang.Long" >
+    delete from farm_assess
+    where id = #{id}
+  </delete>
+
+  <insert id="insert" parameterType="com.farm.base.farm.FarmAssess" >
+    insert into farm_assess
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="farmId != null" >
+        farm_id,
+      </if>
+      <if test="farmName != null" >
+        farm_name,
+      </if>
+      <if test="score != null" >
+        score,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="farmId != null" >
+        #{farmId},
+      </if>
+      <if test="farmName != null" >
+        #{farmName},
+      </if>
+      <if test="score != null" >
+        #{score},
+      </if>
+      <if test="remark != null" >
+        #{remark},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="update" parameterType="com.farm.base.farm.FarmAssess" >
+    update farm_assess
+    <set >
+      <if test="farmId != null" >
+        farm_id = #{farmId},
+      </if>
+      <if test="farmName != null" >
+        farm_name = #{farmName},
+      </if>
+      <if test="score != null" >
+        score = #{score},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+
+</mapper>

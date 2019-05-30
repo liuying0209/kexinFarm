@@ -1,0 +1,290 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.farm.core.record.mapper.FarmingRecordMapper" >
+  <resultMap id="BaseResultMap" type="com.farm.base.record.FarmingRecord" >
+    <id column="id" property="id"  />
+    <result column="plot_crop_id" property="plotCropId"  />
+    <result column="farm_work_id" property="farmWorkId"  />
+    <result column="parent_id" property="parentId"  />
+    <result column="parent_record_id" property="parentRecordId"  />
+    <result column="farm_work_name" property="farmWorkName"  />
+    <result column="score" property="score"  />
+    <result column="remark" property="remark"  />
+    <result column="index_number" property="indexNumber"  />
+    <result column="time" property="time"  />
+    <result column="status" property="status"  />
+    <result column="assess_flag" property="assessFlag"  />
+    <result column="add_flag" property="addFlag"  />
+    <result column="type" property="type" />
+    <result column="category" property="category" />
+    <result column="appended_id" property="appendedId" />
+    <result column="create_time" property="createTime"  />
+    <result column="update_time" property="updateTime"  />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    id, plot_crop_id, farm_work_id, parent_id, parent_record_id,farm_work_name, score,remark, index_number,
+    time, status, assess_flag, add_flag,type,category,appended_id,
+    create_time, update_time
+  </sql>
+
+  <select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+    <include refid="Base_Column_List" />
+    from farming_record
+    where id = #{id}
+  </select>
+
+  <select id="findByPlotCropId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from farming_record
+    where plot_crop_id = #{plotCropId}
+    and parent_id=0 and type=0
+    order by index_number
+  </select>
+
+  <select id="getPlotCropTimerShaft" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from farming_record
+    where  plot_crop_id =#{plotCropId}
+    and  status !=0 and `category`=0
+   order by update_time desc
+  </select>
+
+  <select id="countScoreByPlotCropId" resultType="java.lang.Integer" parameterType="java.lang.Long" >
+    select  IFNULL(SUM(fr.score- IFNULL(0,ra.`deduct_marks`)),0) num
+    from farming_record fr
+    left join record_assess ra on fr.id=ra.record_id
+    where fr.status=2 and fr.category=0
+    and  fr.plot_crop_id=#{plotCropId}
+  </select>
+
+  <select id="findAppendedById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+    <include refid="Base_Column_List" />
+    from farming_record
+    where `appended_id` =#{recordId} and parent_id=0
+  </select>
+
+  <select id="findByParentRecordId" resultMap="BaseResultMap"  >
+    select
+    a.id,
+    a.plot_crop_id,
+    a.farm_work_id,
+    a.parent_id,
+    a.parent_record_id,
+    a.farm_work_name,
+    a.score,
+    a.remark,
+    a.index_number,
+    a.time,
+    a.status,
+    a.assess_flag,
+    a.add_flag,
+    a.type,
+    a.category,
+    a.appended_id,
+    a.create_time,
+    a.update_time
+    from farming_record a ,farming_record b
+    where a.`parent_id`=b.`farm_work_id`and a.`parent_record_id`=b.id
+    and b.id=#{recordId}
+    <if test="flag==true">
+      and (a.status =1 or a.status =2)
+    </if>
+    order by index_number
+  </select>
+
+  <select id="countSunUnfinished" resultType="java.lang.Integer" parameterType="java.lang.Long" >
+   select
+    count(*)
+  from farming_record a ,farming_record b
+  where a.`parent_id`=b.`farm_work_id`and a.`parent_record_id`=b.id
+  and b.id=#{recordId} and b.`category`=2 and (a.status =1 or a.status =0)
+
+  </select>
+
+
+  <delete id="delete" parameterType="java.lang.Long" >
+    delete from farming_record
+    where id = #{id}
+  </delete>
+
+  <insert id="insert" parameterType="com.farm.base.record.FarmingRecord" useGeneratedKeys="true" keyProperty="id">
+    insert into farming_record
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="plotCropId != null" >
+        plot_crop_id,
+      </if>
+      <if test="farmWorkId != null" >
+        farm_work_id,
+      </if>
+      <if test="parentId != null" >
+        parent_id,
+      </if>
+      <if test="parentRecordId != null" >
+        parent_record_id,
+      </if>
+      <if test="farmWorkName != null" >
+        farm_work_name,
+      </if>
+      <if test="score != null" >
+        score,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="indexNumber != null" >
+        index_number,
+      </if>
+      <if test="time != null" >
+        time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="assessFlag != null" >
+        assess_flag,
+      </if>
+      <if test="addFlag != null" >
+        add_flag,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="category != null" >
+        category,
+      </if>
+      <if test="appendedId != null" >
+        appended_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="plotCropId != null" >
+        #{plotCropId},
+      </if>
+      <if test="farmWorkId != null" >
+        #{farmWorkId},
+      </if>
+      <if test="parentId != null" >
+        #{parentId},
+      </if>
+      <if test="parentRecordId != null" >
+        #{parentRecordId},
+      </if>
+      <if test="farmWorkName != null" >
+        #{farmWorkName},
+      </if>
+      <if test="score != null" >
+        #{score},
+      </if>
+      <if test="remark != null" >
+        #{remark},
+      </if>
+      <if test="indexNumber != null" >
+        #{indexNumber},
+      </if>
+      <if test="time != null" >
+        #{time},
+      </if>
+      <if test="status != null" >
+        #{status},
+      </if>
+      <if test="assessFlag != null" >
+        #{assessFlag},
+      </if>
+      <if test="addFlag != null" >
+        #{addFlag},
+      </if>
+      <if test="type != null" >
+        #{type},
+      </if>
+      <if test="category != null" >
+        #{category},
+      </if>
+      <if test="appendedId != null" >
+        #{appendedId},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="update" parameterType="com.farm.base.record.FarmingRecord" >
+    update farming_record
+    <set >
+      <if test="plotCropId != null" >
+        plot_crop_id = #{plotCropId},
+      </if>
+      <if test="farmWorkId != null" >
+        farm_work_id = #{farmWorkId},
+      </if>
+      <if test="parentId != null" >
+        parent_id = #{parentId},
+      </if>
+      <if test="parentRecordId != null" >
+        parent_record_id = #{parentRecordId},
+      </if>
+      <if test="farmWorkName != null" >
+        farm_work_name = #{farmWorkName},
+      </if>
+      <if test="score != null" >
+        score = #{score},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark},
+      </if>
+      <if test="indexNumber != null" >
+        index_number = #{indexNumber},
+      </if>
+      <if test="time != null" >
+        time = #{time},
+      </if>
+      <if test="status != null" >
+        status = #{status},
+      </if>
+      <if test="assessFlag != null" >
+        assess_flag=#{assessFlag},
+      </if>
+      <if test="addFlag != null" >
+        add_flag=#{addFlag},
+      </if>
+      <if test="type != null" >
+        type= #{type},
+      </if>
+      <if test="category != null" >
+        category= #{category},
+      </if>
+      <if test="appendedId != null" >
+        appended_id= #{appendedId},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+
+
+</mapper>

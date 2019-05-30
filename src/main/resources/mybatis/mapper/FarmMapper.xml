@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.farm.core.farm.mapper.FarmMapper">
+    <resultMap id="BaseResultMap" type="com.farm.base.farm.Farm">
+        <id column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="area" property="area"/>
+        <result column="unit" property="unit"/>
+        <result column="score" property="score"/>
+        <result column="brooder_count" property="brooderCount"/>
+        <result column="cool_count" property="coolCount"/>
+        <result column="creator_id" property="creatorId"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+
+    <sql id="Base_Column_List">
+    id, name, area, unit, score, brooder_count, cool_count,creator_id, create_time, update_time
+  </sql>
+
+    <select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from farm
+        where id = #{id}
+    </select>
+
+    <select id="findByIdAndUserId" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from farm
+        where id = #{id} and creator_id=#{userId}
+    </select>
+
+
+    <select id="listAll" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from farm
+    </select>
+
+    <select id="findByUserId" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from farm
+        where creator_id = #{userId}
+    </select>
+
+
+    <select id="findOneByUserId" resultMap="BaseResultMap" parameterType="java.lang.String">
+        select
+        <include refid="Base_Column_List"/>
+        from farm
+        where creator_id = #{userId}
+        limit 1
+    </select>
+
+    <delete id="delete" parameterType="java.lang.Long">
+    delete from farm
+    where id = #{id}
+  </delete>
+
+    <insert id="insert" parameterType="com.farm.base.farm.Farm" keyProperty="id" useGeneratedKeys="true">
+        insert into farm
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="area != null">
+                area,
+            </if>
+            <if test="unit != null">
+                unit,
+            </if>
+            <if test="score != null">
+                score,
+            </if>
+            <if test="brooderCount != null">
+                brooder_count,
+            </if>
+
+            <if test="coolCount != null">
+                cool_count,
+            </if>
+            <if test="creatorId != null">
+                creator_id,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+            <if test="updateTime != null">
+                update_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id},
+            </if>
+            <if test="name != null">
+                #{name},
+            </if>
+            <if test="area != null">
+                #{area},
+            </if>
+            <if test="unit != null">
+                #{unit},
+            </if>
+            <if test="score != null">
+                #{score},
+            </if>
+            <if test="brooderCount != null">
+                #{brooderCount},
+            </if>
+            <if test="coolCount != null">
+                #{coolCount},
+            </if>
+            <if test="creatorId != null">
+                #{creatorId},
+            </if>
+            <if test="createTime != null">
+                #{createTime},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime},
+            </if>
+        </trim>
+    </insert>
+
+    <update id="update" parameterType="com.farm.base.farm.Farm">
+        update farm
+        <set>
+            <if test="name != null">
+                name = #{name},
+            </if>
+            <if test="area != null">
+                area = #{area},
+            </if>
+            <if test="unit != null">
+                unit = #{unit},
+            </if>
+            <if test="score != null">
+                score = #{score},
+            </if>
+            <if test="brooderCount != null">
+                brooder_count=#{brooderCount},
+            </if>
+            <if test="coolCount != null">
+                cool_count=#{coolCount},
+            </if>
+            <if test="creatorId != null">
+                creator_id = #{creatorId},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime},
+            </if>
+            <if test="updateTime != null">
+                update_time = #{updateTime},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+</mapper>

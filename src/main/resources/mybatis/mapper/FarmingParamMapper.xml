@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.farm.core.record.mapper.FarmingParamMapper" >
+  <resultMap id="BaseResultMap" type="com.farm.base.record.FarmingParam" >
+    <id column="id" property="id"  />
+    <result column="record_id" property="recordId"  />
+    <result column="create_time" property="createTime"  />
+    <result column="update_time" property="updateTime"  />
+    <result column="content" property="content" />
+  </resultMap>
+
+
+  <select id="findById" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select 
+   id, record_id, create_time, update_time,content
+    from farming_param
+    where id = #{id}
+  </select>
+
+  <select id="findByRecordId" resultMap="BaseResultMap" parameterType="java.lang.Long" >
+    select
+   id, record_id, create_time, update_time,content
+    from farming_param
+    where record_id = #{recordId}
+  </select>
+  
+  <delete id="delete" parameterType="java.lang.Long" >
+    delete from farming_param
+    where id = #{id}
+  </delete>
+  
+  
+  <insert id="insert" parameterType="com.farm.base.record.FarmingParam" >
+    insert into farming_param
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="recordId != null" >
+        record_id,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="content != null" >
+        content,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id},
+      </if>
+      <if test="recordId != null" >
+        #{recordId},
+      </if>
+      <if test="createTime != null" >
+        #{createTime},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime},
+      </if>
+      <if test="content != null" >
+        #{content},
+      </if>
+    </trim>
+  </insert>
+
+
+  <update id="update" parameterType="com.farm.base.record.FarmingParam" >
+    update farming_param
+    <set >
+      <if test="recordId != null" >
+        record_id = #{recordId},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime},
+      </if>
+      <if test="content != null" >
+        content = #{content},
+      </if>
+    </set>
+    where id = #{id}
+  </update>
+
+
+  <update id="updateByRecordId" parameterType="com.farm.base.record.FarmingParam" >
+    update farming_param
+    <set >
+      <if test="createTime != null" >
+        create_time = #{createTime},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime},
+      </if>
+      <if test="content != null" >
+        content = #{content},
+      </if>
+    </set>
+    where record_id=#{recordId}
+  </update>
+  
+</mapper>
